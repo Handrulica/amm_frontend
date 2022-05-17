@@ -11,7 +11,7 @@ function App() {
       <MenuBar/>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/swap" element={<Swap />} />
+        <Route path="/swap" element={<Swap options={['Andromeda','Serpes', 'Tucano']}/>} />
       </Routes>
     </BrowserRouter>
   );
