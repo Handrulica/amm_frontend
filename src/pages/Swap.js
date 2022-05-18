@@ -1,107 +1,127 @@
-import styled from "@emotion/styled";
 import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  ThemeProvider,
-  Typography,
+    Box,
+    FormControl,
+    MenuItem,
+    Paper,
+    ThemeProvider,
+    Typography,
 } from "@mui/material";
 import React from "react";
+import { STR } from "../helpers";
 import defaultTheme from "../styling/defaultTheme";
-
-const CustomInputLabel = styled(InputLabel)({
-  color: defaultTheme.palette.secondary.main,
-});
-
-const CustomSelect = styled(Select)({
-  color: defaultTheme.palette.secondary.main,
-  ":before": {
-    borderColor: defaultTheme.palette.secondary.main,
-  },
-  ":after": {
-    borderColor: defaultTheme.palette.secondary.main,
-  },
-  "& .MuiSelect-icon": {
-    fill: defaultTheme.palette.secondary.main,
-  },
-});
+import {
+    CustomSelect,
+    MainBoxContainerStyle,
+    mainContainerStyle,
+    RootBoxContainerStyle,
+    TextField_Select_ContainerStyle,
+    WhiteBorderTextField,
+} from "../styling/Swap/SwapStyledComponents";
 
 function Swap({ options }) {
-  const [from, setFrom] = React.useState(options[0]);
-  const [to, setTo] = React.useState(options[1]);
+    const [from, setFrom] = React.useState(options[0]);
+    const [to, setTo] = React.useState(options[1]);
+    const [fromValue, setFromValue] = React.useState(-1)
+    // const [toValue, setToValue] = React.useState(-1)
 
-  const handleFromChange = (e) => {
-    setFrom(e.target.value);
-    if (from === to) setTo("");
-  };
-  const handleToChange = (e) => {
-    setTo(e.target.value);
-    if (from === to) setFrom("");
-  };
+    const handleFromChange = (e) => {
+        setFrom(e.target.value);
+        if (e.target.value === to)
+            setTo(options.filter((o) => o !== e.target.value)[0]);
+    };
+    const handleToChange = (e) => {
+        setTo(e.target.value);
+        if (e.target.value === from)
+            setFrom(options.filter((o) => o !== e.target.value)[0]);
+    };
 
-  return (
-    <Paper
-      sx={{
-        border: "1px solid " + defaultTheme.palette.secondary.main,
-        p: "1rem",
-        m: "2rem auto",
-        width: "30%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <ThemeProvider theme={defaultTheme}>
-        <Typography color={"secondary"} m={"auto"} variant="h6">
-          Swap
-        </Typography>
-        <Box
-          m={"1rem 1rem"}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box m={".5rem 0"}>
-            <FormControl color="mainGreen" fullWidth>
-              <CustomInputLabel>Currency From</CustomInputLabel>
-              <CustomSelect
-                defaultValue={from}
-                placeholder="select currency"
-                fullWidth
-                onChange={handleFromChange}
-                label="Currency From"
-              >
-                {options.map((o) => (
-                  <MenuItem value={o}>{o}</MenuItem>
-                ))}
-              </CustomSelect>
-            </FormControl>
-          </Box>
-          <Box m={".5rem 0"}>
-            <FormControl color="mainGreen" fullWidth>
-              <CustomInputLabel>Currency To</CustomInputLabel>
-              <CustomSelect
-                defaultValue={to}
-                placeholder="select currency"
-                fullWidth
-                onChange={handleToChange}
-                label="Currency To"
-              >
-                {options.map((o) => (
-                  <MenuItem value={o}>{o}</MenuItem>
-                ))}
-              </CustomSelect>
-            </FormControl>
-          </Box>
-        </Box>
-      </ThemeProvider>
-    </Paper>
-  );
+    const handleFromInput = e => {
+        let x = fromValue
+        if (!isNaN(e.target.value))
+            x = e.target.value
+        setFromValue(x)
+    }
+    // const handleToInput = e => {
+    //     let x = toValue
+    //     if (!isNaN(e.target.value))
+    //         x = e.target.value
+    //     setToValue(x)
+    // }
+    return (
+        <Paper sx={mainContainerStyle}>
+            <ThemeProvider theme={defaultTheme}>
+                <Typography
+                    color={defaultTheme.palette.defaultWhite.main}
+                    m={"1rem auto"}
+                    mt={".5rem"}
+                    fontWeight={"300"}
+                    variant="h4"
+                >
+                    Swap
+                </Typography>
+                <Box
+                    m={"auto 2rem"}
+                    sx={MainBoxContainerStyle}
+                >
+                    <Box sx={RootBoxContainerStyle} m={'.5rem 0'}>
+                        <Box sx={TextField_Select_ContainerStyle} m={".5rem 0"}>
+                            <WhiteBorderTextField
+                                onChange={handleFromInput}
+                                fullWidth
+                                placeholder="0.0"
+                                inputMode="number"
+                            />
+                            <FormControl>
+                                <CustomSelect
+                                    value={from}
+                                    sx={{ width: "fit-content", marginRight: "1rem" }}
+                                    onChange={handleFromChange}
+                                    size="small"
+                                >
+                                    {options.map((o, idx) => (
+                                        <MenuItem key={'select1-' + idx} value={o}>{o.abbreviation}</MenuItem>
+                                    ))}
+                                </CustomSelect>
+                            </FormControl>
+                        </Box>
+                        <Typography hidden={fromValue <= 0} fontFamily={"'Inconsolata', monospace"} fontWeight={'400'} m={'auto'} ml={'1.25rem'} mt={'.5rem'} color={defaultTheme.palette.primary.light} variant="h6">
+                            {'$' + (STR(1, from.hzn, fromValue) * 5).toFixed(5)}</Typography>
+                    </Box>
+                    <Box sx={RootBoxContainerStyle} m={'.5rem 0'}>
+                        <Box
+                            sx={TextField_Select_ContainerStyle}
+                            m={".5rem 0"}
+                        >
+                            <WhiteBorderTextField
+                                // onChange={handleToInput}
+                                fullWidth
+                                InputProps={{
+                                    readOnly: true
+                                }}
+                                value={fromValue > 0 ? (STR(to.hzn, 1, STR(1, from.hzn, fromValue)).toFixed(5)) : '0.0'}
+                                placeholder="0.0"
+                                inputMode={"number"}
+                            />
+                            <FormControl>
+                                <CustomSelect
+                                    value={to}
+                                    sx={{ width: "fit-content", marginRight: "1rem" }}
+                                    size="small"
+                                    onChange={handleToChange}
+                                >
+                                    {options.map((o, idx) => (
+                                        <MenuItem key={'select2-' + idx} value={o}>{o.abbreviation}</MenuItem>
+                                    ))}
+                                </CustomSelect>
+                            </FormControl>
+                        </Box>
+                        <Typography hidden={fromValue <= 0} fontFamily={"'Inconsolata', monospace"} fontWeight={'400'} m={'auto'} ml={'1.25rem'} mt={'.5rem'} color={defaultTheme.palette.primary.light} variant="h6">
+                            {'$' + (STR(to.hzn, 1, STR(1, from.hzn, fromValue)) * to.usd).toFixed(5) + ' (' + ((STR(1, from.hzn, fromValue) * from.usd) / (STR(to.hzn, 1, STR(1, from.hzn, fromValue)) * to.usd)).toFixed(3) + '%)'}</Typography>
+                    </Box>
+                </Box>
+            </ThemeProvider>
+        </Paper>
+    );
 }
 
 export default Swap;

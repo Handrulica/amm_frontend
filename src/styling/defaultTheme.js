@@ -9,7 +9,11 @@ const defaultTheme = createTheme({
       main: "#e80371",
     },
     mainGreen:{
-        main: '#2e7d2c'
+        main: '#2e7d2c',
+        light: '#82d280'
+    },
+    defaultWhite:{
+      main:'#fefefe'
     }
   },
 });

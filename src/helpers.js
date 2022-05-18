@@ -18,7 +18,7 @@ const getTables = () => {
                   {
                       row:{
                           key:'Price',
-                          value:'1.2HZN'
+                          value:'0.46HZN'
                       }
                   }
               ]
@@ -41,7 +41,7 @@ const getTables = () => {
                   {
                       row:{
                           key:'Price',
-                          value:'1.1HZN'
+                          value:'0.79HZN'
                       }
                   }
               ]
@@ -64,7 +64,7 @@ const getTables = () => {
                   {
                       row:{
                           key:'Price',
-                          value:'1.5HZN'
+                          value:'0.91HZN'
                       }
                   }
               ]
@@ -72,5 +72,8 @@ const getTables = () => {
       
     ];
   };
+
+
+export const STR = (x,y,z)=>(z*y)/x;
 
   export default getTables  

@@ -12,7 +12,7 @@ export default function Home(props) {
       <Title />
       <Cards
         nr={3}
-        headers={["Andromeda", "Serpes", "Tucana"]}
+        headers={["Andromeda", "Serpes", "Tucano"]}
         tables={tables}
       />
     </ThemeProvider>
